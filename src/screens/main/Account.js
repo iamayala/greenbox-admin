@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import fonts from '../../constants/fonts';
 import { emojis } from '../../constants/utils';
-import { baseURL, get } from '../../utils/Api';
+import { baseURL, get, post } from '../../utils/Api';
 import { clearLocalData, getLocalData, storeLocalData } from '../../utils/Helpers';
 import Modal from 'react-native-modal';
 import PromptModal from '../../component/PromptModal';
@@ -65,6 +65,26 @@ function Account({ navigation }) {
   const addNotification = (value) => {
     storeLocalData('@NOTIFICATION', value);
     // console.log(value);
+  };
+
+  const handleGoOffline = (data) => {
+    const changes = { ...profile, offline: data };
+    storeLocalData('@ADMINDATA', [changes])
+      .then(() => {
+        setoffline(data);
+      })
+      .catch((err) => {
+        setError('Something went wrong! Please try again!');
+      });
+  };
+
+  const handleGoOfflineDB = (data) => {
+    post(`${baseURL}/admin/status`, {
+      admin_name: profile.admin_name,
+      admin_status: data ? 1 : 0,
+    }).catch((err) => {
+      console.info('Error => ' + err);
+    });
   };
 
   return (
@@ -143,7 +163,10 @@ function Account({ navigation }) {
             trackColor={{ false: colors.backgroundGrey, true: colors.backgroundGrey }}
             thumbColor={offline ? colors.primary : colors.secondary}
             ios_backgroundColor={colors.backgroundGrey}
-            onValueChange={() => setoffline(!offline)}
+            onValueChange={() => {
+              handleGoOfflineDB(!offline);
+              handleGoOffline(!offline);
+            }}
             value={offline}
           />
         </View>

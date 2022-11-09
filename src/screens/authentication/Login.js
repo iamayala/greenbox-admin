@@ -119,7 +119,7 @@ function Login({ navigation }) {
   };
 
   const handleSaveToLocal = (data) => {
-    storeLocalData('@ADMINDATA', data)
+    storeLocalData('@ADMINDATA', [{ ...data[0], offline: false }])
       .then(() => {
         setname('');
         setPassword('');

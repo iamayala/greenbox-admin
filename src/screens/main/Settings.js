@@ -113,8 +113,8 @@ export class Settings extends Component {
 
   handleUpdatePassword = () => {
     this.setState({ updating: true });
-    post(`${baseURL}/updatepassword`, {
-      customer_phone_number: this.state.profile.customer_phone_number,
+    post(`${baseURL}/admin/updatepassword`, {
+      admin_name: this.state.profile.admin_name,
       old_password: this.state.oldPwd,
       new_password: this.state.newPwd,
     }).then((res) => {
@@ -141,7 +141,6 @@ export class Settings extends Component {
       notification,
       hideNewPwd,
       hideOldPwd,
-      deletemodal,
       langmodal,
       hidePwd,
       oldPwd,
@@ -155,23 +154,12 @@ export class Settings extends Component {
         {message && (
           <ToastMessage label={message} onPress={() => this.setState({ message: null })} />
         )}
-        <Modal isVisible={deletemodal}>
-          <PromptModal
-            text="If you delete your account, you will still be able to recover it within 30 days. Are you sure you want to start the process of deleting your account?"
-            yes={() => {
-              this.setState({ deletemodal: false });
-              this.handleDeleteAccount();
-            }}
-            no={() => this.setState({ deletemodal: false })}
-          />
-        </Modal>
 
         <Modal isVisible={langmodal}>
           <PromptModal
             text="Unfortunately, we haven't added new languages yet! We will keep you posted when we add a new language."
             yes={() => {
               this.setState({ langmodal: false });
-              this.handleDeleteAccount();
             }}
           />
         </Modal>
@@ -229,17 +217,6 @@ export class Settings extends Component {
               Change Password
             </Text>
             <Feather name="chevron-right" size={20} color={colors.iconDark} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.itemContainer} onPress={() => this.delete.open()}>
-            <Feather name="trash-2" size={20} color={colors.danger} />
-            <Text
-              style={[
-                styles.text,
-                { fontSize: 16, flex: 1, marginLeft: 20, color: colors.danger },
-              ]}>
-              Delete Account
-            </Text>
           </TouchableOpacity>
         </ScrollView>
 
@@ -319,72 +296,6 @@ export class Settings extends Component {
                     ? () => {}
                     : () => this.handleUpdatePassword()
                 }
-              />
-            </ScrollView>
-          </View>
-        </RBSheet>
-
-        {/* before you delete account */}
-        <RBSheet
-          ref={(ref) => {
-            this.delete = ref;
-          }}
-          animationType="slide"
-          openDuration={180}
-          customStyles={{
-            container: {
-              flex: 1,
-            },
-          }}>
-          <View>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontFamily: fonts.bold,
-                fontSize: 17,
-                paddingVertical: 15,
-              }}>
-              Delete Account
-            </Text>
-            <ScrollView
-              keyboardShouldPersistTaps="always"
-              style={{ marginHorizontal: 20 }}
-              contentContainerStyle={{ paddingBottom: 120 }}
-              showsVerticalScrollIndicator={false}>
-              <Text
-                style={[
-                  styles.text,
-                  { fontSize: 16, textAlign: 'center', color: colors.danger, marginBottom: 10 },
-                ]}>
-                If you delete your account, you will still be able to recover it within 30 days. Are
-                you sure you want to start the process of deleting your account?
-              </Text>
-              <View style={{ marginVertical: 10 }}>
-                <Text style={styled.label}>Enter Password</Text>
-                <View style={styled.inputField}>
-                  <TextInput
-                    style={styled.textInput}
-                    secureTextEntry={hidePwd}
-                    placeholder="********"
-                    onChangeText={(e) => this.setState({ pwd: e })}
-                    placeholderTextColor={colors.iconGrey}
-                  />
-                  <TouchableOpacity onPress={() => this.setState({ hidePwd: !hidePwd })}>
-                    <Feather name={hidePwd ? 'eye-off' : 'eye'} size={16} color={colors.iconDark} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <AppButton
-                label="Delete Account"
-                style={{ backgroundColor: colors.danger }}
-                onPress={
-                  deleting
-                    ? () => {}
-                    : () => {
-                        this.handleDeleteAccount();
-                      }
-                }
-                loading={deleting}
               />
             </ScrollView>
           </View>

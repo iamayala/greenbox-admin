@@ -74,12 +74,23 @@ export class Home extends Component {
   }
 
   componentDidMount() {
-    getLocalData('@USERDATA').then((res) => {
-      var data = res[0];
-      this.setState({ location: data?.customer_sector });
-    });
+    this.handleFetchProfile();
     this.handleFetchOrders();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.handleFetchProfile();
+    });
   }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
+  handleFetchProfile = () => {
+    getLocalData('@ADMINDATA').then((res) => {
+      var data = res[0];
+      this.setState({ offline: data?.offline });
+    });
+  };
 
   handleFetchOrders = () => {
     get(`${baseURL}/orders`)
@@ -133,7 +144,7 @@ export class Home extends Component {
                 height: 17,
                 width: 17,
                 borderRadius: 10,
-                backgroundColor: colors.success,
+                backgroundColor: !offline ? colors.danger : colors.success,
               }}
             />
           </View>
