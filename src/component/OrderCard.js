@@ -4,6 +4,7 @@ import colors from '../constants/colors';
 import fonts from '../constants/fonts';
 import { Feather } from '@expo/vector-icons';
 import { emojis, formatDate, formatPrice } from '../constants/utils';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   container: {
@@ -62,7 +63,7 @@ const OrderCard = ({ onPress, style, emoji, item }) => {
               styles.text,
               { fontSize: 12, color: colors.textGrey, textTransform: 'capitalize' },
             ]}>
-            {formatDate(item.placed_on)}
+            {moment(item.placed_on).fromNow()}
           </Text>
         </View>
         <View

@@ -14,6 +14,7 @@ import Feedback from '../screens/main/Feedback';
 import Payment from '../screens/main/Payment';
 import Analytics from '../screens/main/Analytics';
 import New from '../screens/main/New';
+import Track from '../screens/main/Track';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export function HomeStackScreen() {
         gestureEnabled: false,
       }}>
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Track" component={Track} />
     </Stack.Navigator>
   );
 }

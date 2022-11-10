@@ -122,7 +122,7 @@ export class Home extends Component {
           <ToastMessage
             label={error}
             style={{ backgroundColor: colors.danger }}
-            onPress={() => setError(null)}
+            onPress={() => this.setState({ error: null })}
           />
         )}
         <View
@@ -162,7 +162,9 @@ export class Home extends Component {
             data={orders.filter((item) => item.order_status == tab)}
             contentContainerStyle={{ paddingTop: 10 }}
             renderItem={({ item }) => {
-              return <OrderCard item={item} />;
+              return (
+                <OrderCard item={item} onPress={() => navigation.navigate('Track', { item })} />
+              );
             }}
             ListEmptyComponent={() => {
               return <NoData emoji={emojis.hide} label="No orders on this tab" />;

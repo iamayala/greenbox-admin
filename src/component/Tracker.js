@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
 
 export const Tracker = ({ time, header, subheader, active }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { display: active ? 'flex' : 'none' }]}>
       <View
         style={[
           styles.iconView,
