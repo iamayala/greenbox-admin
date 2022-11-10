@@ -77,6 +77,7 @@ export class Home extends Component {
     this.handleFetchProfile();
     this.handleFetchOrders();
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.handleFetchOrders();
       this.handleFetchProfile();
     });
   }
@@ -153,7 +154,7 @@ export class Home extends Component {
           <Tab label="Pending" onPress={() => this.setState({ tab: 1 })} active={tab == 1} />
           <Tab label="In progress" onPress={() => this.setState({ tab: 2 })} active={tab == 2} />
           <Tab label="Completed" onPress={() => this.setState({ tab: 3 })} active={tab == 3} />
-          <Tab label="Cancelled" onPress={() => this.setState({ tab: 4 })} active={tab == 4} />
+          <Tab label="Cancelled" onPress={() => this.setState({ tab: 9 })} active={tab == 9} />
         </View>
         <View style={{ flex: 1 }}>
           <FlatList
