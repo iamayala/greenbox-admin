@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
@@ -180,6 +179,7 @@ export class Track extends Component {
       })
       .catch((err) => {
         this.setState({ message: 'Something went wrong, please try again later!' });
+        this.updateOrderStatus(order_id, 3);
         setTimeout(() => {
           this.setState({ message: null });
         }, 2000);
