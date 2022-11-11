@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
   },
   button: {
-    height: 40.67,
-    width: 40.67,
-    borderRadius: 13,
+    height: 33.67,
+    width: 33.67,
+    borderRadius: 10,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -50,9 +50,27 @@ const ProductCard = ({ item, onPress, style, checked }) => {
         style={{ height: 140, width: '100%', borderTopLeftRadius: 14, borderTopRightRadius: 14 }}
       />
       <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
-        <Text numberOfLines={1} style={styles.header}>
-          {item?.vegetable_name}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text numberOfLines={1} style={styles.header}>
+            {item?.vegetable_name}
+          </Text>
+          <View
+            style={{
+              height: 12,
+              width: 12,
+              borderRadius: 10,
+              backgroundColor:
+                item.vegetable_status == 1
+                  ? colors.primary
+                  : item.vegetable_status == 0
+                  ? colors.warning
+                  : item.vegetable_status == 9
+                  ? colors.danger
+                  : colors.iconGrey,
+              marginLeft: 5,
+            }}
+          />
+        </View>
         <Text numberOfLines={1} style={styles.subHeader}>
           1 {item?.unit_short}
         </Text>
@@ -64,9 +82,8 @@ const ProductCard = ({ item, onPress, style, checked }) => {
             alignItems: 'center',
           }}>
           <Text style={styles.price}>RWF {item?.price}</Text>
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: checked ? colors.danger : colors.primary }]}>
-            <Feather name="edit-2" size={18} color={colors.white} />
+          <TouchableOpacity style={[styles.button, { backgroundColor: colors.lightGreen }]}>
+            <Feather name="edit-2" size={17} color={colors.primary} />
           </TouchableOpacity>
         </View>
       </View>

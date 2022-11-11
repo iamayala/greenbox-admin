@@ -17,8 +17,9 @@ import colors from '../../constants/colors';
 import fonts from '../../constants/fonts';
 import ToastMessage from '../../component/ToastMessage';
 import { baseURL, get, post } from '../../utils/Api';
-import { height } from '../../constants/dimensions';
+import { height, width } from '../../constants/dimensions';
 import AppButton from '../../component/AppButton';
+import Action from '../../component/Action';
 
 const styles = StyleSheet.create({
   text: {
@@ -69,6 +70,8 @@ function New({ route, navigation }) {
   const [uploading, setuploading] = useState(false);
   const [description, setdescription] = useState(item?.description);
   const [name, setname] = useState(item?.vegetable_name);
+  const [updating, setupdating] = useState(false);
+  const [showActions, setshowActions] = useState(false);
 
   useEffect(() => {
     handleFetchTypes();
@@ -125,6 +128,56 @@ function New({ route, navigation }) {
       setselectedtype(null);
       setTimeout(() => {
         setMessage(null);
+      }, 2000);
+    });
+  };
+
+  const handleUpdateVegetable = () => {
+    setuploading(true);
+    var data = {
+      vegetable_name: name,
+      price: selectedprice,
+      vegetable_type_id: selectedtype.vegetable_type_id,
+      vegetable_unit_id: selectedunit.vegetable_unit_id,
+      vegetable_image:
+        'https://images.unsplash.com/photo-1590779033100-9f60a05a013d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTgwOTN8MHwxfHNlYXJjaHwxfHxCUk9DQ09MSXxlbnwwfHx8fDE2NDg2NDMyMDI&ixlib=rb-1.2.1&q=80&w=1080',
+      description: description,
+      vegetable_id: item.vegetable_id,
+    };
+    post(`${baseURL}/update/vegetable`, data).then((res) => {
+      if (res.data.status == 200) {
+        setMessage('Product updated succesfully!');
+      }
+      setuploading(false);
+      setTimeout(() => {
+        setMessage(null);
+      }, 2000);
+    });
+  };
+
+  const handleUpdateStatus = (status) => {
+    setupdating(true);
+    var data = {
+      vegetable_status: status,
+      vegetable_id: item.vegetable_id,
+    };
+    post(`${baseURL}/update/vegetable/status`, data).then((res) => {
+      setshowActions(false);
+      switch (res.data.status) {
+        case 200:
+          setMessage('Product updated succesfully!');
+          break;
+        case 404:
+          setMessage('Product updated changed!');
+          break;
+        case 400:
+          setMessage('Something went wrong, please try again later!');
+          break;
+      }
+      setupdating(false);
+      setTimeout(() => {
+        setMessage(null);
+        navigation.goBack();
       }, 2000);
     });
   };
@@ -191,10 +244,40 @@ function New({ route, navigation }) {
         <Text style={[styles.text, { fontSize: 18 }]}>
           {item ? `Edit Item` : `Create New Item`}
         </Text>
-        <TouchableOpacity style={styles.topBtn}>
-          <Feather name="more-vertical" size={20} color={colors.white} />
+        <TouchableOpacity style={styles.topBtn} onPress={() => setshowActions(!showActions)}>
+          <Feather name="more-vertical" size={20} color={colors.iconGrey} />
         </TouchableOpacity>
       </View>
+      {showActions && (
+        <View
+          style={{
+            backgroundColor: colors.backgroundGrey,
+            width: width * 0.7,
+            position: 'absolute',
+            zIndex: 2,
+            top: 50,
+            right: 25,
+          }}>
+          <Action
+            label="Available"
+            active={item?.vegetable_status == 1 && true}
+            onPress={updating ? () => {} : () => handleUpdateStatus(1)}
+            loading={updating}
+          />
+          <Action
+            label="not available today"
+            active={item?.vegetable_status == 0 && true}
+            onPress={updating ? () => {} : () => handleUpdateStatus(0)}
+            loading={updating}
+          />
+          <Action
+            label="not available indefinitely"
+            active={item?.vegetable_status == 9 && true}
+            onPress={updating ? () => {} : () => handleUpdateStatus(9)}
+            loading={updating}
+          />
+        </View>
+      )}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 25 }}>
           <View style={{ marginVertical: 10 }}>
@@ -286,6 +369,8 @@ function New({ route, navigation }) {
               selectedtype == null ||
               selectedunit == null
                 ? () => {}
+                : item
+                ? () => handleUpdateVegetable()
                 : () => handleUploadVegetable()
             }
             loading={uploading}

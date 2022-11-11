@@ -12,5 +12,6 @@ export default {
   white: '#fff',
   danger: '#ff4444',
   lightGreen: '#B2E4C4',
-  success: "#5cb85c"
+  success: '#5cb85c',
+  warning: '#f0ad4e',
 };

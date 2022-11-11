@@ -154,13 +154,23 @@ export class Home extends Component {
           <Tab label="Pending" onPress={() => this.setState({ tab: 1 })} active={tab == 1} />
           <Tab label="In progress" onPress={() => this.setState({ tab: 2 })} active={tab == 2} />
           <Tab label="Completed" onPress={() => this.setState({ tab: 3 })} active={tab == 3} />
-          <Tab label="Cancelled" onPress={() => this.setState({ tab: 9 })} active={tab == 9} />
+          <Tab label="Cancelled" onPress={() => this.setState({ tab: 4 })} active={tab == 4} />
         </View>
         <View style={{ flex: 1 }}>
           <FlatList
             refreshing={loading}
             onRefresh={() => this.handleFetchOrders()}
-            data={orders.filter((item) => item.order_status == tab)}
+            data={orders.filter(
+              tab == 1
+                ? (item) => item.order_status == 1
+                : tab == 2
+                ? (item) => item.order_status == 2 || item.order_status == 3
+                : tab == 3
+                ? (item) => item.order_status == 5
+                : tab == 4
+                ? (item) => item.order_status == 9
+                : (item) => item.order != 0
+            )}
             contentContainerStyle={{ paddingTop: 10 }}
             renderItem={({ item }) => {
               return (

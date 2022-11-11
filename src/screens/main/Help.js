@@ -94,9 +94,11 @@ function Help({ route, navigation }) {
     get(`${baseURL}/faq`).then((res) => {
       if (res.data.status == 200) {
         const result = res.data.data;
-        result.sort((a, b) => {
-          return b.faq_rating - a.faq_rating;
-        });
+        result
+          .filter((item) => item.faq_app == 2)
+          .sort((a, b) => {
+            return b.faq_rating - a.faq_rating;
+          });
         setquestions(result);
       }
     });
